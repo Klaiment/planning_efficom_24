@@ -1,18 +1,19 @@
 [tool.poetry]
-name = "Planning"
-version = "1.0.0"
+name = "planning"
+version = "0.1.0"
+description = ""
+authors = ["Clement <clement62ing@gmail.com>"]
 readme = "README.md"
-description = "Planning API"
-authors = ["Oui are champions "]
 
 [tool.poetry.dependencies]
-python = ">=3.11"
-fastapi = "0.110.0"
-python-multipart = "0.0.9"
+python = "^3.10"
+fastapi = "^0.110.0"
+python-multipart = "^0.0.9"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
+
 
 [build-system]
-requires = ["poetry-core=1.1.12"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
