@@ -6,7 +6,7 @@ services:
       context: .
       target: 'develop-stage'
     ports:
-      - 80:80
+      - 8888:80
     volumes:
       - './app/:/app'
     environment:
@@ -21,7 +21,7 @@ services:
       MYSQL_USER: usertest
       MYSQL_PASSWORD: mysecurepassword
     ports:
-      - 3306:3306
+      - 3355:3306
     volumes:
       - ./db:/var/lib/mysql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
