@@ -8,19 +8,20 @@ try:
         port=3306,
         database="planning"
     )
-
-    def query(query):
-        cursor = connection.cursor()
-        cursor.execute(query)
-        result = cursor.fetchall()
-        connection.close()
-        return result
-    def execute(query):
-        cursor = connection.cursor()
-        cursor.execute(query)
-        connection.commit()
-        connection.close()
-        return 1
-
+    print("Connexion réussie !")
 except mariadb.Error as err:
     print(f"Erreur lors de la connexion à la base de données : {err}")
+
+def query(query):
+    cursor = connection.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()  # Fermez le curseur
+    return result
+
+def execute(query):
+    cursor = connection.cursor()
+    cursor.execute(query)
+    connection.commit()
+    cursor.close()  # Fermez le curseur
+    return 1
