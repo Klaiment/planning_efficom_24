@@ -6,6 +6,7 @@ router= APIRouter()
 # Routes users
 @router.get("/users")
 async def get_users():
+
     return {"message": "Get users"}
 @router.post("/utilisateur/")
 async def create_user(user: User):
