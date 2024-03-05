@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from routers.users import router as user_router
 
 app = FastAPI()
 class Entreprise(BaseModel):
@@ -42,3 +43,4 @@ class NotificationVue(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
+app.include_router(user_router, tags=["Users"])
