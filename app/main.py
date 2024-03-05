@@ -1,46 +1,30 @@
+import logging
+import time
+
 from fastapi import FastAPI
-from pydantic import BaseModel
 from routers.users import router as user_router
+import mariadb
+import sys
 
 app = FastAPI()
-class Entreprise(BaseModel):
-    id: int
-    nom: str
-    adresse: str
-    ville: str
-    code_postal: str
-    pays: str
-class User(BaseModel):
-    id: int
-    nom: str
-    prenom: str
-    email: str
-    password: str
-    role: str
-    entreprise_id: int
-class Planning(BaseModel):
-    id: int
-    date_start: str
-    date_end: str
-    nom: str
-    entreprise_id: int
-class UserPlanning(BaseModel):
-    id: int
-    user_id: int
-    planning_id: int
-class Notification(BaseModel):
-    id: int
-    id_user: int
-    id_planning: int
-    title: str
-    details: str
-class NotificationVue(BaseModel):
-    id: int
-    user_id: int
-    notif_id: int
-    date: str
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+print("database_maria")
 
+try:
+
+    print("hw!")
+    connection = mariadb.connect(
+        user="usertest",
+        password="mysecurepassword",
+        host="database_maria",
+        port=3306,
+        database="planning"
+    )
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM user')
+    result = cursor.fetchall()
+    print(result)
+except mariadb.Error as err:
+    print(f"Erreur lors de la connexion à la base de données : {err}")
+
+# Vérification de la connexion à la base de données
 app.include_router(user_router, tags=["Users"])

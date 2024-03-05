@@ -1,7 +1,12 @@
 # for local development
 version: '3.7'
+networks:
+    backend:
+        driver: bridge
 services:
   back-end:
+    depends_on:
+      - database_maria
     build:
       context: .
       target: 'develop-stage'
@@ -13,8 +18,11 @@ services:
       - LOG_LEVEL=info
       - RELOAD=true # when in use with ghcr.io/multi-py/python-uvicorn image
     # command: /bin/sh -c "/start-reload.sh" # For production, this line should be removed (no need for hot reload)
+
+
   database_maria:
     image: mariadb:10.5
+    container_name: database_maria
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: planning
