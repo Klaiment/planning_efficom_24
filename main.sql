@@ -1,3 +1,6 @@
+DROP DATABASE IF EXISTS planning;
+CREATE DATABASE planning;
+USE planning;
 CREATE TABLE entreprise (
     id INT PRIMARY KEY NOT NULL,
     nom VARCHAR(100),
@@ -11,7 +14,7 @@ CREATE TABLE user (
     id INT PRIMARY KEY NOT NULL,
     nom VARCHAR(100),
     prenom VARCHAR(100),
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     role VARCHAR(50),
     entreprise_id INT,
@@ -20,18 +23,25 @@ CREATE TABLE user (
 
 CREATE TABLE planning (
     id INT PRIMARY KEY NOT NULL,
-    date_start DATETIME,
-    date_end DATETIME,
     nom VARCHAR(255),
     entreprise_id INT,
     FOREIGN KEY (entreprise_id) REFERENCES entreprise(id)
 );
-CREATE TABLE user_planning (
+CREATE TABLE task (
+    id INT PRIMARY KEY NOT NULL,
+    nom VARCHAR(255),
+    description TEXT,
+    date_start DATETIME,
+    date_end DATETIME,
+    planning_id INT,
+    FOREIGN KEY (planning_id) REFERENCES planning(id)
+);
+CREATE TABLE user_task (
     id INT PRIMARY KEY NOT NULL,
     user_id INT,
-    planning_id INT,
+    task_id INT,
     FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (planning_id) REFERENCES planning(id)
+    FOREIGN KEY (task_id) REFERENCES task(id)
 );
 
 CREATE TABLE notification (
@@ -52,3 +62,11 @@ CREATE TABLE notification_vue (
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (notif_id) REFERENCES notification(id)
 );
+
+ALTER TABLE entreprise AUTO_INCREMENT = 1;
+ALTER TABLE user AUTO_INCREMENT = 1;
+ALTER TABLE planning AUTO_INCREMENT = 1;
+ALTER TABLE task AUTO_INCREMENT = 1;
+ALTER TABLE user_task AUTO_INCREMENT = 1;
+ALTER TABLE notification AUTO_INCREMENT = 1;
+ALTER TABLE notification_vue AUTO_INCREMENT = 1;
