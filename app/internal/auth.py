@@ -41,7 +41,6 @@ async def login(credentials: Annotated[OAuth2PasswordRequestForm, Depends()]):
         password = password_hash(password)
         req = f'SELECT * FROM user WHERE email="{username}" AND password="{password}"'
         user = query(req)
-        print(user)
         if len(user) == 0:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
