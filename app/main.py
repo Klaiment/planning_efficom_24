@@ -11,5 +11,4 @@ async def root():
 
 app.include_router(user_router, tags=["Users"])
 app.include_router(entreprise_router, tags=["Entreprises"])
-=======
 app.include_router(auth_router, tags=["Users"])
