@@ -16,6 +16,10 @@ def query(query):
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
+<<<<<<< HEAD
+=======
+    connection.commit()
+>>>>>>> 97a92ec7e2b8bff6f71d1f3a19d3ce0464ff8b8f
     cursor.close()  # Fermez le curseur
     return result
 
@@ -28,4 +32,9 @@ def execute(query):
         return 1
     except Exception as e:
         print(f"Erreur lors de l'exécution de la requête : {e}")
+<<<<<<< HEAD
         return 0
+=======
+        return 0
+
+>>>>>>> 97a92ec7e2b8bff6f71d1f3a19d3ce0464ff8b8f

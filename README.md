@@ -26,17 +26,16 @@ ReadME
 - [x] DELETE /entreprise/:id : Supprimer une entreprise
 
 ## Routes des utilisateurs avec sa description
-- [x] GET /utilisateurs : Récupérer tous les utilisateurs
-- [x] GET /utilisateur/:id : Récupérer un utilisateur
-- [x] POST /utilisateur : Créer un utilisateur
-- [x] PUT /utilisateur/:id : Modifier un utilisateur
-- [x] DELETE /utilisateur/:id : Supprimer un utilisateur
-- [x] GET /utilisateur/:id/planning : Récupérer tous les plannings d'un utilisateur
-- [x] GET /utilisateur/:id/planning/:id : Récupérer un planning d'un utilisateur
-- [x] POST /utilisateur/:id/planning : Créer une tache pour un utilisateur
-- [x] PUT /utilisateur/:id/planning/:id : Modifier une tache d'un utilisateur
-- [x] DELETE /utilisateur/:id/planning/:id : Supprimer une tache d'un utilisateur
-- [x] GET /utilisateur/:id/entreprise : Récupérer l'entreprise d'un utilisateur
-- [x] PUT /utilisateur/:id/entreprise : Modifier l'entreprise d'un utilisateur
-- [x] DELETE /utilisateur/:id/entreprise : Supprimer l'entreprise d'un utilisateur
-- [x] GET /utilisateur/:id/entreprise/planning : Récupérer tous les taches d'une entreprise d'un utilisateur
+- [x] GET /users : Récupérer tous les utilisateurs
+- [x] GET /user/:id : Récupérer un utilisateur
+- [x] POST /user : Créer un utilisateur
+- [x] PUT /user/:id : Modifier un utilisateur
+- [x] DELETE /user/:id : Supprimer un utilisateur
+- [] GET /user/:id/plannings : Récupérer tous les plannings d'un utilisateur
+- [] GET /user/:id/planning/:id : Récupérer un planning d'un utilisateur
+- [] POST /user/:id/planning : Créer une tache pour un utilisateur
+- [] PUT /user/:id/planning/:id : Modifier une tache d'un utilisateur
+- [] DELETE /user/:id/planning/:id : Supprimer une tache d'un utilisateur
+- [] GET /user/:id/entreprise : Récupérer l'entreprise d'un utilisateur
+- [] PUT /user/:id/entreprise : Modifier l'entreprise d'un utilisateur
+- [] GET /user/:id/entreprise/plannings : Récupérer tous les taches d'une entreprise d'un utilisateur
