@@ -16,6 +16,7 @@ def query(query):
     cursor = connection.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
+    connection.commit()
     cursor.close()  # Fermez le curseur
     return result
 
