@@ -68,3 +68,9 @@ async def get_plannings(connected_user_email: Annotated[str, Depends(get_decoded
             "task_id": planning[2]
         })
     return {"plannings": json}
+@router.get("/user/{user_id}/planning/{planning_id}", tags=["Users/plannings"], description="jaime les moches")
+async def get_planning(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int, planning_id: int):
+    planning = query(f"SELECT * FROM user_task WHERE id={planning_id} AND user_id={user_id}")
+    if len(planning) == 0:
+        raise HTTPException(status_code=404, detail="Planning not found")
+    return {"planning": planning}
