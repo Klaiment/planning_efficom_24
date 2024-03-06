@@ -20,8 +20,13 @@ def query(query):
     return result
 
 def execute(query):
-    cursor = connection.cursor()
-    cursor.execute(query)
-    connection.commit()
-    cursor.close()  # Fermez le curseur
-    return 1
+    try:
+        cursor = connection.cursor()
+        cursor.execute(query)
+        connection.commit()
+        cursor.close()  # Fermez le curseur
+        return 1
+    except Exception as e:
+        print(f"Erreur lors de l'exécution de la requête : {e}")
+        return 0
+

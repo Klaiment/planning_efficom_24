@@ -6,7 +6,7 @@ app = FastAPI()
 # Vérification de la connexion à la base de données
 @app.get("/")
 async def root():
-    return query("SELECT * FROM user")
+    return {"message": "Hello World"}
 
 app.include_router(user_router, tags=["Users"])
 app.include_router(auth_router, tags=["Users"])
