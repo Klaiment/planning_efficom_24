@@ -17,20 +17,20 @@ router = APIRouter()
 async def get_users(connected_user_email: Annotated[str, Depends(get_decoded_token)]):
     users = query("SELECT * FROM user")
     return {"users": users}
-@router.post("/utilisateur/")
+@router.post("/user/")
 async def create_user(user: User):
     password = password_hash(user.password)
     req = f'INSERT INTO user (nom, prenom, email, password, role, entreprise_id) VALUES ("{user.nom}","{user.prenom}","{user.email}","{password}","{user.role}","{user.entreprise_id}")'
     execute(req)
     return {"message": "Create user"}
 
-@router.get("/users/{user_id}")
+@router.get("/user/{user_id}")
 async def get_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int):
     user = query(f"SELECT * FROM user WHERE id={user_id}")
     if len(user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
     return {"user": user}
-@router.put("/users/{user_id}")
+@router.put("/user/{user_id}")
 async def update_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user: User):
     check_user = query(f"SELECT * FROM user WHERE id={user.id}")
     if len(check_user) == 0:
@@ -43,7 +43,7 @@ async def update_user(connected_user_email: Annotated[str, Depends(get_decoded_t
     if result == 0:
         raise HTTPException(status_code=500, detail="Internal server error")
     return {"message": user}
-@router.delete("/users/{user_id}")
+@router.delete("/user/{user_id}")
 async def delete_user(connected_user_email: Annotated[str, Depends(get_decoded_token)],user_id: int):
     check_user = query(f"SELECT * FROM user WHERE id={user_id}")
     if len(check_user) == 0:
@@ -53,3 +53,18 @@ async def delete_user(connected_user_email: Annotated[str, Depends(get_decoded_t
     if result == 0:
         raise HTTPException(status_code=500, detail="Internal server error")
     return {"message": "Delete user"}
+
+# Routes planning
+@router.get("/user/{user_id}/plannings", tags=["Users/plannings"])
+async def get_plannings(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int):
+    plannings = query(f"SELECT * FROM user_task WHERE user_id={user_id}")
+    if len(plannings) == 0:
+        raise HTTPException(status_code=404, detail="No plannings found for this user")
+    json = []
+    for planning in plannings:
+        json.append({
+            "id": planning[0],
+            "user_id": planning[1],
+            "task_id": planning[2]
+        })
+    return {"plannings": json}
