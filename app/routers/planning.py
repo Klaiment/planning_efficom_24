@@ -58,9 +58,3 @@ async def delete_planning(connected_user_email: Annotated[str, Depends(get_decod
 async def get_plannings_by_entreprise(connected_user_email: Annotated[str, Depends(get_decoded_token)], entreprise_id: int):
     plannings = query(f"SELECT * FROM planning WHERE entreprise_id={entreprise_id}")
     return {"plannings": plannings}
-
-# Afficher les plannings d'un utilisateur
-@router.get("/plannings/user/{user_id}")
-async def get_plannings_by_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int):
-    plannings = query(f"SELECT * FROM planning WHERE id IN (SELECT planning_id FROM user_planning WHERE user_id={user_id})")
-    return {"plannings": plannings}

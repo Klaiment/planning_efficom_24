@@ -13,9 +13,9 @@ async def get_notifications(connected_user_email: str = Depends(get_decoded_toke
     return {"notifications": notifications}
 
 # Crée une notification
-@router.post("/notification/", response_model=Notification, status_code=status.HTTP_201_CREATED)
+@router.post("/notification/")
 async def create_notification(notification: Notification, connected_user_email: str = Depends(get_decoded_token)):
-    req = f'INSERT INTO notification (planning_id, user_id, detail, title) VALUES ("{notification.planning_id}", "{notification.user_id}", "{notification.detail}", "{notification.title}")'
+    req = f'INSERT INTO notification (id_planning, id_user, details, title) VALUES ("{notification.planning_id}", "{notification.user_id}", "{notification.detail}", "{notification.title}")'
     execute(req)
     return {"message": "Notification created"}
 
@@ -33,7 +33,7 @@ async def update_notification(notification_id: int, notification: Notification, 
     check_notification = query(f"SELECT * FROM notification WHERE id={notification_id}")
     if len(check_notification) == 0:
         raise HTTPException(status_code=404, detail="Notification not found")
-    req = f'UPDATE notification SET planning_id="{notification.planning_id}", user_id="{notification.user_id}", detail="{notification.detail}", title="{notification.title}" WHERE id={notification_id}'
+    req = f'UPDATE notification SET id_planning="{notification.planning_id}", id_user="{notification.user_id}", details="{notification.detail}", title="{notification.title}" WHERE id={notification_id}'
     execute(req)
     return {"message": "Notification updated"}
 
