@@ -10,8 +10,6 @@ async def root():
     return {"message": "Hello World"}
 
 app.include_router(user_router, tags=["Users"])
-<<<<<<< HEAD
 app.include_router(entreprise_router, tags=["Entreprises"])
 =======
 app.include_router(auth_router, tags=["Users"])
->>>>>>> 97a92ec7e2b8bff6f71d1f3a19d3ce0464ff8b8f
