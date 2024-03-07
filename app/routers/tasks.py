@@ -11,7 +11,7 @@ router = APIRouter()
 # Routes tasks
 
 @router.get("/tasks")
-async def get_tasks():
+async def get_tasks(connected_user_email: Annotated[str, Depends(get_decoded_token)]):
     """
     Endpoint to return all tasks
     """
@@ -19,7 +19,7 @@ async def get_tasks():
     return {"tasks": tasks}
 
 @router.get("/task/{task_id}")
-async def get_task(task_id: int):
+async def get_task(connected_user_email: Annotated[str, Depends(get_decoded_token)], task_id: int):
     """
     Endpoint to return task by id 
     """
@@ -29,7 +29,7 @@ async def get_task(task_id: int):
     return {"task": task}
 
 @router.post("/task/")
-async def create_task(task: Task):
+async def create_task(connected_user_email: Annotated[str, Depends(get_decoded_token)], task: Task):
     """
     Endpoint to create a task 
     """
@@ -42,7 +42,7 @@ async def create_task(task: Task):
     return {"message": "Task created"}
 
 @router.put("/task/{task_id}")
-async def update_task(task_id: int, task: Task):
+async def update_task(connected_user_email: Annotated[str, Depends(get_decoded_token)], task_id: int, task: Task):
     """
     Endpoint to update a task 
     """
@@ -56,7 +56,7 @@ async def update_task(task_id: int, task: Task):
     return {"message": "Task updated"}
 
 @router.delete("/task/{task_id}")
-async def delete_task(task_id: int):
+async def delete_task(connected_user_email: Annotated[str, Depends(get_decoded_token)], task_id: int):
     """
     Endpoint to delete a task 
     """
