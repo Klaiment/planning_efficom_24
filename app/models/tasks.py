@@ -6,6 +6,4 @@ class Task(BaseModel):
     description: str
     date_start: str
     date_end: str
-    planning_id: int
-
-    
+    planning_id: int    
