@@ -70,3 +70,25 @@ ALTER TABLE task MODIFY COLUMN id INT AUTO_INCREMENT;
 ALTER TABLE user_task MODIFY COLUMN id INT AUTO_INCREMENT;
 ALTER TABLE notification MODIFY COLUMN id INT AUTO_INCREMENT;
 ALTER TABLE notification_vue MODIFY COLUMN id INT AUTO_INCREMENT;
+
+
+-- TRIGGERS
+DELIMITER $$
+CREATE TRIGGER `notify_users_on_join` AFTER INSERT ON `user_task`
+FOR EACH ROW BEGIN
+    INSERT INTO notification (id_user, id_planning, title, details)
+    SELECT ut.user_id, t.planning_id, 'Nouvel utilisateur assigné à la tâche', CONCAT(NEW.user_id, ' a rejoint la tâche ', t.nom)
+    FROM user_task ut
+    JOIN task t ON ut.task_id = t.id
+    WHERE t.id = NEW.task_id AND ut.user_id != NEW.user_id;
+END$$
+
+CREATE TRIGGER `notify_users_on_leave` BEFORE DELETE ON `user_task`
+FOR EACH ROW BEGIN
+    INSERT INTO notification (id_user, id_planning, title, details)
+    SELECT ut.user_id, t.planning_id, 'Utilisateur désassigné de la tâche', CONCAT(OLD.user_id, ' a quitté la tâche ', t.nom)
+    FROM user_task ut
+    JOIN task t ON ut.task_id = t.id
+    WHERE t.id = OLD.task_id AND ut.user_id != OLD.user_id;
+END$$
+DELIMITER ;
