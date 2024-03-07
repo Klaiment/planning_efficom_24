@@ -11,6 +11,7 @@ from hashlib import sha256
 # local imports
 from models.users import User
 from internal.database import query, execute
+from cryptography.fernet import Fernet
 
 def password_hash(password: str):
     return sha256(password.encode()).hexdigest()
@@ -36,23 +37,26 @@ async def get_decoded_token(token: str = Depends(oauth2_scheme)):
 async def login(credentials: Annotated[OAuth2PasswordRequestForm, Depends()]):
     if credentials.username is not None and credentials.password is not None:
         username = credentials.username
-
+        check_user = query(f"SELECT * FROM user")
         password = credentials.password
         password = password_hash(password)
-        req = f'SELECT * FROM user WHERE email="{username}" AND password="{password}"'
-        user = query(req)
-        if len(user) == 0:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        jwt_creation_time = datetime.now(timezone.utc)
-        expire = jwt_creation_time + access_token_expires
-        to_encode = {
-            "sub": credentials.username,
-            "exp": expire,
-            "iat": jwt_creation_time
-        }
+        for unitUser in check_user:
+            chipher_check = Fernet(unitUser[7])
+            email_dechiffre = chipher_check.decrypt(unitUser[3]).decode()
+            if email_dechiffre == credentials.username:
+                if unitUser[4] == password:
+                    print(password)
+                    print(unitUser[4])
+                    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+                    jwt_creation_time = datetime.now(timezone.utc)
+                    expire = jwt_creation_time + access_token_expires
+                    to_encode = {
+                        "sub": credentials.username,
+                        "exp": expire,
+                        "iat": jwt_creation_time
+                    }
 
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-        return {"access_token": encoded_jwt, "token_type": "bearer"}
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
+                    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+                    return {"access_token": encoded_jwt, "token_type": "bearer"}
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")

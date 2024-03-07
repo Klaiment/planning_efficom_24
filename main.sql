@@ -18,6 +18,7 @@ CREATE TABLE user (
     password VARCHAR(255),
     role VARCHAR(50),
     entreprise_id INT,
+    secret VARCHAR(255),
     FOREIGN KEY (entreprise_id) REFERENCES entreprise(id)
 );
 

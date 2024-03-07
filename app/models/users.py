@@ -8,3 +8,4 @@ class User(BaseModel):
     password: str
     role: str
     entreprise_id: int
+    secret : str | None = None
