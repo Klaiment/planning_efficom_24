@@ -6,7 +6,7 @@ from models.users import User
 from internal.database import query, execute
 from hashlib import sha256
 from internal.auth import get_decoded_token
-
+from cryptography.fernet import Fernet
 
 def password_hash(password: str):
     return sha256(password.encode()).hexdigest()
@@ -19,27 +19,45 @@ async def get_users(connected_user_email: Annotated[str, Depends(get_decoded_tok
     if len(users) == 0:
         raise HTTPException(status_code=404, detail="No users found")
     return {"users": users}
-
 @router.post("/user/")
 async def create_user(user: User):
-    check_user = query(f"SELECT * FROM user WHERE email='{user.email}'")
-    if len(check_user) != 0:
-        raise HTTPException(status_code=400, detail="User already exists")
+    check_user = query(f"SELECT * FROM user")
+    for unitUser in check_user:
+        chipher_check = Fernet(unitUser[7])
+        email_dechiffre = chipher_check.decrypt(unitUser[3]).decode()
+        if email_dechiffre == user.email:
+            raise HTTPException(status_code=409, detail="User already exists")
     check_entreprise = query(f"SELECT * FROM entreprise WHERE id={user.entreprise_id}")
     if len(check_entreprise) == 0:
         raise HTTPException(status_code=404, detail="Entreprise not found")
     password = password_hash(user.password)
-    req = f'INSERT INTO user (nom, prenom, email, password, role, entreprise_id) VALUES ("{user.nom}","{user.prenom}","{user.email}","{password}","{user.role}","{user.entreprise_id}")'
+    secret = Fernet.generate_key()
+    cipher_suite = Fernet(secret)
+    nom = cipher_suite.encrypt(user.nom.encode())
+    prenom = cipher_suite.encrypt(user.prenom.encode())
+    email = cipher_suite.encrypt(user.email.encode())
+    nom_hex = nom.decode()
+    prenom_hex = prenom.decode()
+    email_hex = email.decode()
+    req = f'INSERT INTO user (nom, prenom, email, password, role, entreprise_id, secret) VALUES ("{nom_hex}","{prenom_hex}","{email_hex}","{password}","{user.role}","{user.entreprise_id}", "{secret.decode()}")'
     execute(req)
     return {"message": "Create user"}
 
 @router.get("/user/{user_id}")
 async def get_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int):
-    user = query(f"SELECT * FROM user WHERE id={user_id}")
-    if len(user) == 0:
+    check_user = query(f"SELECT * FROM user WHERE id={user_id}")
+    if len(check_user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"user": user}
-@router.put("/user/{user_id}")
+    crypt_user = check_user[0]
+    chipher_check = Fernet(crypt_user[7])
+    nom_dechiffre = chipher_check.decrypt(crypt_user[1]).decode()
+    prenom_dechiffre = chipher_check.decrypt(crypt_user[2]).decode()
+    email_dechiffre = chipher_check.decrypt(crypt_user[3]).decode()
+
+    return {"user": {"nom": nom_dechiffre, "prenom": prenom_dechiffre, "email": email_dechiffre}}
+
+
+@router.put("/users/{user_id}")
 async def update_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user: User):
     check_user = query(f"SELECT * FROM user WHERE id={user.id}")
     if len(check_user) == 0:
