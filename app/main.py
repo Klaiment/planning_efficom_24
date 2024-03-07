@@ -1,4 +1,9 @@
+# System libs imports
+
+# Libs imports
 from fastapi import FastAPI
+
+#local imports
 from routers.entreprises import router as entreprise_router
 from routers.users import router as user_router
 from internal.auth import router as auth_router
@@ -6,6 +11,7 @@ from routers.tasks import router as task_router
 from routers.planning import router as planning_router
 from routers.notification import router as notification_router
 from internal.database import query
+
 app = FastAPI()
 # Vérification de la connexion à la base de données
 @app.get("/")

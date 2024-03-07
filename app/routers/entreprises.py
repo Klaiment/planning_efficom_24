@@ -1,12 +1,15 @@
+# System libs imports
+from hashlib import sha256
 from typing import Annotated
 
+# Libs imports
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
+
+# local imports
 from models.entreprises import Entreprise
 from internal.database import query, execute
-from hashlib import sha256
 from internal.auth import get_decoded_token
-
 
 def password_hash(password: str):
     return sha256(password.encode()).hexdigest()

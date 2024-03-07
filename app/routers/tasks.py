@@ -1,10 +1,13 @@
+# System libs imports
 from typing import Annotated
 
+# Libs imports
 from fastapi import APIRouter, HTTPException, status, Depends
+
+# local imports
 from internal.database import query, execute
 from internal.auth import get_decoded_token
 from models.tasks import Task
-from hashlib import sha256
 
 router = APIRouter()
 

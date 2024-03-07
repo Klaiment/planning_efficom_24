@@ -1,12 +1,17 @@
+# System libs imports
 from typing import Annotated
+from hashlib import sha256
 
+# Libs imports
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
+from cryptography.fernet import Fernet
+
+# local imports
 from models.users import User
 from internal.database import query, execute
-from hashlib import sha256
 from internal.auth import get_decoded_token
-from cryptography.fernet import Fernet
+
 
 def password_hash(password: str):
     return sha256(password.encode()).hexdigest()
@@ -15,12 +20,19 @@ router = APIRouter()
 # Routes users
 @router.get("/users")
 async def get_users(connected_user_email: Annotated[str, Depends(get_decoded_token)]):
+    """
+    Endpoint to return all users
+    """
     users = query("SELECT * FROM user")
     if len(users) == 0:
         raise HTTPException(status_code=404, detail="No users found")
     return {"users": users}
+
 @router.post("/user/")
 async def create_user(user: User):
+    """
+    Endpoint to create a new user
+    """
     check_user = query(f"SELECT * FROM user")
     for unitUser in check_user:
         chipher_check = Fernet(unitUser[7])
@@ -45,6 +57,9 @@ async def create_user(user: User):
 
 @router.get("/user/{user_id}")
 async def get_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int):
+    """
+    Endpoint to return a specific user by ID
+    """
     check_user = query(f"SELECT * FROM user WHERE id={user_id}")
     if len(check_user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
@@ -59,6 +74,9 @@ async def get_user(connected_user_email: Annotated[str, Depends(get_decoded_toke
 
 @router.put("/users/{user_id}")
 async def update_user(connected_user_email: Annotated[str, Depends(get_decoded_token)], user: User):
+    """
+    Endpoint to update a user
+    """
     check_user = query(f"SELECT * FROM user WHERE id={user.id}")
     if len(check_user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
@@ -70,8 +88,12 @@ async def update_user(connected_user_email: Annotated[str, Depends(get_decoded_t
     if result == 0:
         raise HTTPException(status_code=500, detail="Internal server error")
     return {"message": user}
+
 @router.delete("/user/{user_id}")
 async def delete_user(connected_user_email: Annotated[str, Depends(get_decoded_token)],user_id: int):
+    """
+    Endpoint to delete a user
+    """
     check_user = query(f"SELECT * FROM user WHERE id={user_id}")
     if len(check_user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
@@ -84,6 +106,9 @@ async def delete_user(connected_user_email: Annotated[str, Depends(get_decoded_t
 # Routes planning
 @router.get("/user/{user_id}/usertask", tags=["Users/plannings"])
 async def get_plannings(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int):
+    """
+    Endpoint to return all plannings for a user
+    """
     plannings = query(f"SELECT * FROM user_task WHERE user_id={user_id}")
     if len(plannings) == 0:
         raise HTTPException(status_code=404, detail="No plannings found for this user")
@@ -95,14 +120,22 @@ async def get_plannings(connected_user_email: Annotated[str, Depends(get_decoded
             "task_id": planning[2]
         })
     return {"plannings": json}
+
 @router.get("/user/{user_id}/usertask/{user_task}", tags=["Users/plannings"], description="jaime les moches")
 async def get_planning(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int, user_task: int):
+    """
+    Endpoint to retrieve a specific planning for a user by user_task ID
+    """
     planning = query(f"SELECT * FROM user_task WHERE id={user_task} AND user_id={user_id}")
     if len(planning) == 0:
         raise HTTPException(status_code=404, detail="Planning not found")
     return {"planning": planning}
+
 @router.post("/user/{user_id}/planning/{task_id}", tags=["Users/plannings"])
 async def create_planning(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int, task_id: int):
+    """
+    Endpoint to create a planning for a user and a task
+    """
     check_user = query(f"SELECT * FROM user WHERE id={user_id}")
     if len(check_user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
@@ -114,8 +147,12 @@ async def create_planning(connected_user_email: Annotated[str, Depends(get_decod
     req = f'INSERT INTO user_task (user_id, task_id) VALUES ("{user_id}","{task_id}")'
     execute(req)
     return {"message": "Create planning"}
+
 @router.delete("/user/{user_id}/planning/{task_id}", tags=["Users/plannings"])
 async def delete_planning(connected_user_email: Annotated[str, Depends(get_decoded_token)], user_id: int, task_id: int):
+    """
+    Endpoint to delete a planning for a user and a task
+    """
     check_user = query(f"SELECT * FROM user WHERE id={user_id}")
     if len(check_user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
