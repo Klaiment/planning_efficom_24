@@ -1,5 +1,13 @@
 ReadME
 
+## Installation
+
+Cloner le Projet
+Vous pouvez cloner le projet directement grâce a ce lien : git clone https://github.com/Klaiment/planning_efficom_24.git
+
+Lancer le projet
+Pour lancer le projet il faut simplement faire la commande : docker compose up
+
 ## Découpage du projet
 - [x] Création du projet
 - [x] Création de la base de données
