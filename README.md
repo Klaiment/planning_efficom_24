@@ -1,5 +1,13 @@
 ReadME
 
+## Installation
+
+Cloner le Projet
+Vous pouvez cloner le projet directement grâce a ce lien : git clone https://github.com/Klaiment/planning_efficom_24.git
+
+Lancer le projet
+Pour lancer le projet il faut simplement faire la commande : docker compose up
+
 ## Découpage du projet
 - [x] Création du projet
 - [x] Création de la base de données
@@ -31,11 +39,7 @@ ReadME
 - [x] POST /user : Créer un utilisateur
 - [x] PUT /user/:id : Modifier un utilisateur
 - [x] DELETE /user/:id : Supprimer un utilisateur
-- [] GET /user/:id/plannings : Récupérer tous les plannings d'un utilisateur
-- [] GET /user/:id/planning/:id : Récupérer un planning d'un utilisateur
-- [] POST /user/:id/planning : Créer une tache pour un utilisateur
-- [] PUT /user/:id/planning/:id : Modifier une tache d'un utilisateur
-- [] DELETE /user/:id/planning/:id : Supprimer une tache d'un utilisateur
-- [] GET /user/:id/entreprise : Récupérer l'entreprise d'un utilisateur
-- [] PUT /user/:id/entreprise : Modifier l'entreprise d'un utilisateur
-- [] GET /user/:id/entreprise/plannings : Récupérer tous les taches d'une entreprise d'un utilisateur
+- [x] GET /user/{user_id}/usertask pour récupérer tous les user_task d'un utilisateur.
+- [x] GET /user/{user_id}/usertask/{user_task} pour récupérer un user_task spécifique d'un utilisateur.
+- [x] POST /user/{user_id}/planning/{task_id} pour créer un nouveau user_task pour un utilisateur et une tâche donnés.
+- [x] DELETE /user/{user_id}/planning/{task_id} pour supprimer un user_task existant pour un utilisateur et une tâche donnés.

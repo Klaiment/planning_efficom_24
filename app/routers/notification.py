@@ -1,5 +1,8 @@
+# Libs imports
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
+
+# local imports
 from models.notification import Notification
 from internal.database import query, execute
 from internal.auth import get_decoded_token
